@@ -1,0 +1,6 @@
+all:
+  hosts:
+    {% for host in range(30, 251) %}
+    host{{ host }}:
+      ansible_host: 172.29.100.{{ host }}
+    {% endfor %}
