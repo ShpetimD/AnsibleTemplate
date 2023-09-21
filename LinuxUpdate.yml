@@ -1,1 +1,44 @@
+---
+- name: Update and Clean Ubuntu
+  hosts: all  # Update all hosts from your inventory
+  become: yes  # Run tasks with sudo (root) privileges
+  
+  tasks:
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+      tags:
+        - update
 
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+        autoremove: yes  # Remove unnecessary packages
+        autoclean: yes   # Remove cached package files
+      tags:
+        - upgrade
+
+    - name: Clean up APT cache
+      apt:
+        autoclean: yes
+      tags:
+        - clean
+
+    - name: Remove old package versions
+      apt:
+        autoclean: yes
+        clean: yes
+      tags:
+        - clean
+
+    - name: Clean temporary directories
+      command: "find /tmp -type f -delete"
+      ignore_errors: yes  # Ignore errors if no files are found in /tmp
+      tags:
+        - clean
+
+    - name: Clean apt cache directory
+      command: "rm -rf /var/cache/apt/archives/*.deb"
+      ignore_errors: yes  # Ignore errors if no .deb files are found
+      tags:
+        - clean
